@@ -2,6 +2,10 @@
 
 This project calculates and visualizes the life cycle stages of _C. elegans_ (Caenorhabditis elegans) at different storage temperatures. The program allows users to input a start time, and it calculates the timing of various life stages (Egg, L1, L2, L3, L4, and Adult) based on specific temperature conditions.
 
+## Version
+
+- **Current Version**: `1.1.0`
+
 ## Features
 
 - _Life Cycle Calculation:_ Computes the time taken to reach each life stage based on input temperature and start time.
