@@ -4,7 +4,7 @@ This project calculates and visualizes the life cycle stages of _C. elegans_ (Ca
 
 ## Version
 
-- **Current Version**: `1.1.1`
+- **Current Version**: `1.1.2`
 
 ## Features
 
@@ -15,15 +15,23 @@ This project calculates and visualizes the life cycle stages of _C. elegans_ (Ca
 
 ## Requirements
 
-`Python` >= 3.10
-`nicegui`: For building a GUI interface.
-`seaborn`: For plotting life cycle data.
-`matplotlib`: For visualization.
-`pandas`: For data handling.
-`numpy`: For numerical computations.
+- `Python` >= 3.10
+- `nicegui`: For building a GUI interface.
+- `seaborn`: For plotting life cycle data.
+- `matplotlib`: For visualization.
+- `pandas`: For data handling.
+- `numpy`: For numerical computations.
+
+## Installation
+
+Clone the repository:
+```git clone https://github.com/yourusername/C-Elegans-Life-Cycle-Calculator.git```
+
+Navigate into the project folder:
+```cd C-Elegans-Life-Cycle-Calculator```
 
 Install all dependencies using requirements.txt:
-`pip install -r requirements.txt`
+```pip install -r requirements.txt```
 
 ## Usage
 
