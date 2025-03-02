@@ -4,7 +4,7 @@ This project calculates and visualizes the life cycle stages of _C. elegans_ (Ca
 
 ## Version
 
-- **Current Version**: `1.1.0`
+- **Current Version**: `1.1.1`
 
 ## Features
 
