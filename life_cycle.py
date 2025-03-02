@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from matplotlib import ticker
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -67,97 +68,60 @@ def display_life_cycle():
 
 def plot_life_cycle():
     """
-    Generates a line plot of the life cycle stages at different temperatures using Seaborn.
+    Generates subplots of the life cycle stages at different temperatures using Seaborn.
     """
-    # Create a DataFrame that will be easier for Seaborn to plot
+    # Convert data into a DataFrame
     worm_data = []
     for temp, data in WORM_LIFE_CYCLE.items():
         for stage, time in zip(data["Stages"], data["Times"]):
             worm_data.append({"Temperature": temp, "Stage": stage, "Time": time})
 
     df = pd.DataFrame(worm_data)
-
-    # Convert 'Time' to datetime objects to ensure proper sorting
     df["Time"] = pd.to_datetime(df["Time"], format=TIME_FORMAT)
 
     # Set Seaborn theme
     sns.set_theme(style="whitegrid")
 
-    # Define the correct order for the legend
-    hue_order = ["15C", "20C", "25C"]
-
-    # Use Seaborn's pastel palette and assign colors
+    # Define temperature order and custom color palette
+    temp_order = ["15C", "20C", "25C"]
     pastel_palette = sns.color_palette("pastel")
-
-    # Custom color mapping using pastel colors
     custom_palette = {
         "15C": pastel_palette[0],
         "20C": pastel_palette[4],
         "25C": pastel_palette[3],
     }
 
-    # Plotting time on the y-axis
-    sns.lineplot(
-        x="Stage",
-        y="Time",
-        hue="Temperature",
-        data=df,
-        marker="o",
-        linewidth=2,
-        markersize=8,
-        hue_order=hue_order,
-        palette=custom_palette,
-    )
+    # Create subplots
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharex=True)
 
-    # Format the plot
-    plt.title("C. Elegans Life Cycle Stages at Different Temperatures", fontsize=16)
-    plt.xlabel("Life Stages", fontsize=12)
-    plt.ylabel("Time", fontsize=12)
+    for ax, temp in zip(axes, temp_order):
+        temp_df = df[df["Temperature"] == temp]
 
-    # Get all the unique times across all stages and temperatures for y-axis ticks
-    all_times = df["Time"].unique()
+        sns.lineplot(
+            x="Stage",
+            y="Time",
+            data=temp_df,
+            marker="o",
+            linewidth=2,
+            markersize=8,
+            color=custom_palette[temp],
+            ax=ax,
+        )
 
-    # Sort the times using numpy
-    all_times = np.sort(all_times)
+        ax.set_title(f"{temp}", fontsize=14)
+        ax.set_xlabel("Life Stages")
+        ax.set_ylabel("Time")
 
-    # Set a time threshold (e.g., 3 hours) to group times
-    time_threshold = pd.Timedelta(hours=3)
+        # Set custom y-ticks per subplot
+        y_ticks = np.sort(temp_df["Time"].unique())
+        ax.set_yticks(y_ticks)
+        ax.yaxis.set_major_formatter(mdates.DateFormatter("%m/%d %I:%M %p"))
 
-    # Group times into 3-hour windows and calculate the average time within each window
-    averaged_times = []
-    current_group = [all_times[0]]
+        ax.tick_params(axis="x", rotation=30)
+        ax.yaxis.grid(True, linestyle="--", linewidth=0.5)
 
-    for current_time in all_times[1:]:
-        # Check if the current time is within the threshold of the last time in the group
-        if current_time - current_group[-1] <= time_threshold:
-            current_group.append(current_time)
-        else:
-            # Calculate the average time for the current group
-            # Convert datetime to integer (nanoseconds) for averaging
-            avg_time = pd.to_datetime(np.mean(np.array(current_group).astype(np.int64)))
-            averaged_times.append(avg_time)
-            
-            # Start a new group with the current time
-            current_group = [current_time]
-
-    # Don't forget to add the last group
-    if current_group:
-        avg_time = pd.to_datetime(np.mean(np.array(current_group).astype(np.int64)))
-        averaged_times.append(avg_time)
-
-    # Set the y-axis ticks to the averaged times
-    plt.gca().set_yticks(averaged_times)
-
-    # Format the y-axis to display times properly
-    plt.gca().yaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y %I:%M %p"))
-
-    # Show the legend and tighten the layout
-    plt.legend(title="Temperature")
-    plt.xticks(rotation=45)
+    plt.suptitle("C. Elegans Life Cycle Stages at Different Temperatures", fontsize=16)
     plt.tight_layout()
-
-    # Optional: Add gridlines for better readability
-    plt.gca().yaxis.grid(True, which="both", linestyle="--", linewidth=0.5)
     plt.show()
 
 
@@ -172,4 +136,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Easy test time: 02/25/2025 08:00 AM
+# 0 Easy test time: 02/25/2025 08:00 AM
