@@ -14,16 +14,37 @@ def on_start_time_selected(start_time):
     # Generate the Seaborn plot
     file_path = plot_life_cycle(life_cycle_data)
 
-    # Display the graph on the page
-    ui.label("C. Elegans Life Cycle Plot")
-    ui.image(file_path).classes("rounded-lg shadow-lg")  # Display saved image
+    # Update the graph display dynamically
+    graph_display.set_source(file_path)
 
-    # Download Button
-    ui.button("Download Graph", on_click=lambda: ui.download(file_path)).classes(
-        "mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md"
-    )
+    # Show the download button
+    download_button.classes(remove="hidden")
+
+
+# Define layout
+with ui.row().classes("w-full h-screen grid grid-cols-5 gap-4 p-4"):
+
+    # Left Panel (Date Picker) - 1/5 width
+    with ui.column().classes(
+        "col-span-1 border-r border-gray-300 p-4 flex items-center justify-center"
+    ):
+        get_user_input(on_start_time_selected)
+
+    # Right Panel (Graph Display) - 4/5 width
+    with ui.column().classes("col-span-4 flex flex-col items-center justify-center"):
+        ui.label("C. Elegans Life Cycle Plot").classes("text-lg font-bold mb-4")
+        graph_display = ui.image("").classes(
+            "w-4/5 max-h-[80vh] rounded-lg shadow-lg"
+        )  # Bigger Graph
+
+        # Download Button (Hidden Initially)
+        download_button = ui.button(
+            "Download Graph",
+            on_click=lambda: (
+                ui.download(graph_display.source) if graph_display.source else None
+            ),
+        ).classes("mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hidden")
 
 
 # Start NiceGUI app
-get_user_input(on_start_time_selected)
 ui.run(title="C. Elegans Life Cycle", port=8080)

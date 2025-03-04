@@ -32,8 +32,8 @@ def get_user_input(callback):
         except ValueError as e:
             ui.notify(f"Error parsing date/time: {e}")
 
-    with ui.card().tight():
-        ui.label("Select a start date and time")
+    with ui.row().classes("flex items-center justify-center"):  # Align date & time pickers in one row
+        ui.label("Select starting Date & Time").classes("text-lg font-bold mb-4")
         date_picker = ui.date()
         time_picker = ui.time()
-        ui.button("Submit", on_click=on_submit)
+        ui.button("Submit", on_click=on_submit).classes("mt-2 w-1/2 bg-blue-500 text-white rounded-lg shadow-md")
